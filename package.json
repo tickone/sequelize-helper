@@ -1,0 +1,21 @@
+{
+	"name": "sequelize-parser-helper",
+  "version": "0.0.1",
+	"description": "Sequelize helper module",
+  "main": "index.js",
+  "repository": "https://github.com/tickone/sequelize-helper.git",
+  "author": "Michael.K <michael34435@capslock.tw>",
+  "license": "MIT",
+	"devDependencies": {
+		"eslint": "^7.27.0",
+		"eslint-config-airbnb": "^18.2.1",
+		"eslint-import-resolver-node": "^0.3.4",
+		"eslint-plugin-import": "^2.23.3"
+	},
+	"dependencies": {
+		"sequelize": "^6.6.2"
+	},
+  "engines": {
+    "node": ">=14"
+  }
+}
