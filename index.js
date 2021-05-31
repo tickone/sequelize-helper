@@ -70,6 +70,25 @@ function parseDate(value, timezone = 0) {
   };
 }
 
+function parseBulkCreate(values, keys = ['id']) {
+  const duplicated = [];
+
+  return values.reduce((a, b) => {
+    const key = keys.map((k) => b[k]).join(':');
+
+    if (duplicated.includes(key)) {
+      return a;
+    }
+
+    duplicated.push(key);
+
+    return [
+      ...a,
+      b,
+    ];
+  }, []);
+}
+
 class SequelizeHelper {
   constructor({ timezone = 8 } = {}) {
     this.timezone = timezone;
@@ -78,8 +97,10 @@ class SequelizeHelper {
 
 SequelizeHelper.parseOperator = parseOperator;
 SequelizeHelper.parseDate = parseDate;
+SequelizeHelper.parseBulkCreate = parseBulkCreate;
 
 SequelizeHelper.prototype.parseOperator = parseOperator;
 SequelizeHelper.prototype.parseDate = parseDate;
+SequelizeHelper.prototype.parseBulkCreate = parseBulkCreate;
 
 module.exports = SequelizeHelper;
