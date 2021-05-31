@@ -53,7 +53,7 @@ function parseOperator(value) {
     }, {});
 }
 
-function parseDate(key, value, timezone = 0) {
+function parseDate(value, timezone = 0) {
   const [, year, month, day] = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
   const startedAt = new Date(Date.UTC(year, Number(month) - 1, Number(day), 0, 0, 0, 0));
   const endedAt = new Date(Date.UTC(year, Number(month) - 1, Number(day), 23, 59, 59, 999));
@@ -65,10 +65,8 @@ function parseDate(key, value, timezone = 0) {
   };
 
   return {
-    [key]: {
-      [Op.gte]: getTime(startedAt).toISOString(),
-      [Op.lte]: getTime(endedAt).toISOString(),
-    },
+    [Op.gte]: getTime(startedAt).toISOString(),
+    [Op.lte]: getTime(endedAt).toISOString(),
   };
 }
 
