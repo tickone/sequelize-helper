@@ -9,7 +9,7 @@ function parseOperator(value) {
     return value.map(this.parseOperator);
   }
 
-  if (value.constructor.name !== 'object') {
+  if (value.constructor.name !== 'Object') {
     return value;
   }
 
@@ -35,11 +35,12 @@ function parseOperator(value) {
     .reduce((obj, key) => {
       if (operators[key]) {
         return {
+          ...obj,
           [operators[key]]: this.parseOperator(value[key]),
         };
       }
 
-      if (value[key]?.constructor?.name === 'object') {
+      if (value[key]?.constructor?.name === 'Object') {
         return {
           ...obj,
           [key]: this.parseOperator(value[key]),
@@ -73,20 +74,22 @@ function parseDate(value, timezone = 0) {
 function parseBulkCreate(values, keys = ['id']) {
   const duplicated = [];
 
-  return values.reduce((a, b) => {
-    const key = keys.map((k) => b[k]).join(':');
+  return values
+    .reverse()
+    .reduce((a, b) => {
+      const key = keys.map((k) => b[k]).join(':');
 
-    if (duplicated.includes(key)) {
-      return a;
-    }
+      if (duplicated.includes(key)) {
+        return a;
+      }
 
-    duplicated.push(key);
+      duplicated.push(key);
 
-    return [
-      ...a,
-      b,
-    ];
-  }, []);
+      return [
+        ...a,
+        b,
+      ];
+    }, []);
 }
 
 class SequelizeHelper {
