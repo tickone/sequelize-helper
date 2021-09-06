@@ -6,7 +6,7 @@ function parseOperator(value) {
   }
 
   if (value.constructor.name === 'Array') {
-    return value.map(this.parseOperator);
+    return value.map(this.parseOperator ?? parseOperator);
   }
 
   if (value.constructor.name !== 'Object') {
@@ -36,14 +36,14 @@ function parseOperator(value) {
       if (operators[key]) {
         return {
           ...obj,
-          [operators[key]]: this.parseOperator(value[key]),
+          [operators[key]]: (this.parseOperator ?? parseOperator)(value[key]),
         };
       }
 
       if (value[key]?.constructor?.name === 'Object') {
         return {
           ...obj,
-          [key]: this.parseOperator(value[key]),
+          [key]: (this.parseOperator ?? parseOperator)(value[key]),
         };
       }
 
