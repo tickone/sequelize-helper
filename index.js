@@ -54,6 +54,47 @@ function parseOperator(value) {
     }, {});
 }
 
+function parseSQLLiteral(value, col = '') {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (value.constructor.name !== 'Object') {
+    return value;
+  }
+
+  const operators = {
+    gte: '>=',
+    gt: '>',
+    lte: '<=',
+    lt: '<',
+    eq: '=',
+    ne: '!=',
+    $gte: '>=',
+    $gt: '>',
+    $lte: '<=',
+    $lt: '<',
+    $eq: '=',
+    $ne: '!=',
+  };
+
+  return Object
+    .keys(value)
+    .reduce((values, key) => {
+      if (operators[key]) {
+        return [
+          ...values,
+          `${col} ${operators[key]} ${value[key]}`,
+        ];
+      }
+
+      return [
+        ...values,
+        ...(this.parseSQLLiteral ?? parseSQLLiteral)(value[key], key),
+      ];
+    }, []);
+}
+
 function parseDate(value, timezone = 0) {
   const [, year, month, day] = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
   const startedAt = new Date(Date.UTC(year, Number(month) - 1, Number(day), 0, 0, 0, 0));
@@ -101,9 +142,11 @@ class SequelizeHelper {
 SequelizeHelper.parseOperator = parseOperator;
 SequelizeHelper.parseDate = parseDate;
 SequelizeHelper.parseBulkCreate = parseBulkCreate;
+SequelizeHelper.parseSQLLiteral = parseSQLLiteral;
 
 SequelizeHelper.prototype.parseOperator = parseOperator;
 SequelizeHelper.prototype.parseDate = parseDate;
 SequelizeHelper.prototype.parseBulkCreate = parseBulkCreate;
+SequelizeHelper.prototype.parseSQLLiteral = parseSQLLiteral;
 
 module.exports = SequelizeHelper;
